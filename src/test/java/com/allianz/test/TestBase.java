@@ -1,7 +1,7 @@
 package com.allianz.test;
 
-import com.allianz.test.drivers.TestManager;
-import com.allianz.test.drivers.WebEnvironmentBehavior;
+import com.allianz.test.drivers.DriverManager;
+import com.allianz.test.drivers.WebEnvironment;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -15,35 +15,32 @@ public abstract class TestBase {
     }
 
     @Parameterized.Parameters(name = "Combinations of environments and drivers.")
-    public static Iterable<TestManager> testManagers() {
-        TestManager firefoxWebDriver =
-                new TestManager
-                        .Builder()
-                        .withEnvironmentehavior(new WebEnvironmentBehavior())
-                        .withDriver(new FirefoxDriver())
-                        .build();
+    public static Iterable<DriverManager> testManagers() {
+        DriverManager firefoxDriverManager =
+           DriverManager
+                   .builder()
+                   .environment(new WebEnvironment(new FirefoxDriver()))
+                   .build();
 
-        TestManager chromeWebDriver =
-                new TestManager
-                        .Builder()
-                        .withEnvironmentehavior(new WebEnvironmentBehavior())
-                        .withDriver(new ChromeDriver())
-                        .build();
+        DriverManager chromeDriverManager =
+                DriverManager
+                .builder()
+                .environment(new WebEnvironment(new ChromeDriver()))
+                .build();
 
-        // Commented out because I don't have the appium stuff on my machine, but you get the message.
-//        TestManager appiumDriver =
-//                new TestManager
-//                        .Builder()
-//                        .withEnvironmentehavior(new MobileEnvironmentBehavior<WebElement>())
-//                        .withDriver(new AndroidDriver<WebElement>(new ChromeOptions()))
-//                        .build();
+        // No idea how to run Appium so commenting out for now.
+//        DriverManager androidChromeDriverManager =
+//                DriverManager
+//                .builder()
+//                .environment(new MobileEnvironment<WebElement>(new AndroidDriver<WebElement>(new ChromeOptions())))
+//                .build();
 
-        return Arrays.asList(firefoxWebDriver, chromeWebDriver); // ... etc.
+        return Arrays.asList(firefoxDriverManager, chromeDriverManager); // etc...
     }
 
-    protected final TestManager testManager;
+    protected final DriverManager driverManager;
 
-    public TestBase(TestManager testManager) {
-        this.testManager = testManager;
+    public TestBase(DriverManager driverManager) {
+        this.driverManager = driverManager;
     }
 }
